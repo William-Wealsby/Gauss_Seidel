@@ -8,7 +8,7 @@ void gs_iteration(double* upper,double* lower,int max_i,double* bvect,double* re
     //x_n+1 = lower*x_n+1 + upper*x + d
     for (int j=0;j<max_i;j++){
         
-        temp =0;
+        temp = 0;
         
         // loop to perform matrix multiplication        
         for (int i=0;i<max_i;i++){
