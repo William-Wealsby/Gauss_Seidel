@@ -62,27 +62,27 @@ void gauss_seidel(double* matrix,int max_i,double* bvect,double* return_vect,int
     double* lower_mat;
     upper_mat = (double*)malloc(max_i*sizeof(double));
     lower_mat = (double*)malloc(max_i*sizeof(double));
+
+    for (int n=0;n<max_i;n++){return_vect[n]=bvect[n]/matrix[n*max_i+n];}
+
     normalise_system(matrix,max_i,bvect);
     upper(matrix,max_i,upper_mat);
     lower(matrix,max_i,lower_mat);
-    
-    // give initial guess for return_vect
-
 
     // loop for n iterations of the gs methods
     for (int n=0;n<itrs;n++){
         gs_iteration(upper_mat,lower_mat,max_i,bvect,return_vect);
     }
 
-    free(upper_mat);
-    free(lower_mat);
+    //free(upper_mat);
+    //free(lower_mat);
 
 }
 
 int main(int argc, char** argv){
-       
-   //
-    int size = 3;
+    
+    //
+    int size = 2;
     double* matrix;
     double* bvect;
     double* return_vect;
@@ -94,8 +94,13 @@ int main(int argc, char** argv){
     return_vect = (double*)malloc(size*sizeof(double));
     
     // set values for bvect and matrix
-    // set intial guess for return_vect
-     
+    matrix[0] = 1;
+    matrix[1] = 1;
+    matrix[2] = 1;
+    matrix[3] = 2;
+
+    bvect[0] = 3;
+    bvect[1] = 0;
 
     // run guass_seidel algorithm for calculating the vector
     gauss_seidel(matrix,size,bvect,return_vect,itrs);
@@ -109,9 +114,11 @@ int main(int argc, char** argv){
 
 
     // free memory used by vectors and matrices 
+    /*
     free(matrix);
     free(bvect);
     free(return_vect);
+    */
 
     return 0;
 }
