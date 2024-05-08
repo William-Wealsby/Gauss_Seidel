@@ -6,15 +6,15 @@ void gs_iteration(double* upper,double* lower,int max_i,double* bvect,double* re
             
     double temp;
     //x_n+1 = lower*x_n+1 + upper*x + d
-    for (int j=0;j<max_i;j++){
+    for (int i=0;i<max_i;i++){
         
         temp =0;
         
         // loop to perform matrix multiplication        
-        for (int i=0;i<max_i;i++){
-            temp += (-1)*upper[i+max_i*j]*return_vect[i] + (-1)*lower[i+max_i*j]*return_vect[i];  
+        for (int j=0;j<max_i;j++){
+            temp += (-1)*upper[j+max_i*i]*return_vect[j] + (-1)*lower[j+max_i*i]*return_vect[j];  
         }
-        return_vect[j] = temp + bvect[j];
+        return_vect[i] = temp + bvect[i];
 
     } 
 
@@ -27,8 +27,8 @@ void gs_iteration(double* upper,double* lower,int max_i,double* bvect,double* re
 void upper(double* matrix,int max_i,double* return_matrix){
     for (int i=0;i<max_i;i++){
         for (int j=0;j<max_i;j++){
-            if (i<j){return_matrix[i+j*max_i]=matrix[i+max_i*j];}
-            else {return_matrix[i+max_i*j]=0;}
+            if (i<j){return_matrix[j+i*max_i]=matrix[j+max_i*i];}
+            else {return_matrix[j+max_i*i]=0;}
         }
     }
 }
@@ -40,8 +40,8 @@ void upper(double* matrix,int max_i,double* return_matrix){
 void lower(double* matrix,int max_i,double* return_matrix){
     for (int i=0;i<max_i;i++){
         for (int j=0;j<max_i;j++){
-            if (i>j){return_matrix[i+max_i*j]=matrix[i+max_i*j];}
-            else {return_matrix[i+max_i*j]=0;}
+            if (i>j){return_matrix[j+max_i*i]=matrix[j+max_i*i];}
+            else {return_matrix[j+max_i*i]=0;}
         }
     }
 
@@ -49,9 +49,10 @@ void lower(double* matrix,int max_i,double* return_matrix){
 
 // normalise the matrix and bvect so the diagonal elements of the matrix are all 1
 void normalise_system(double* matrix,int max_i,double* bvect){
-    for (int j=0;j<max_i;j++){
-        for (int i=0;i<max_i;i++){matrix[i+max_i*j]/=matrix[j+max_i*j];}
-        bvect[j] = bvect[j]/matrix[j+max_i*j]; 
+    for (int i=0;i<max_i;i++){
+        double divisor = matrix[i+max_i*i];
+        bvect[i] = bvect[i]/divisor; 
+        for (int j=0;j<max_i;j++){matrix[j+max_i*i]/=divisor;}
     }
 }
  
@@ -69,8 +70,8 @@ void gauss_seidel(double* matrix,int max_i,double* bvect,double* return_vect,int
     upper(matrix,max_i,upper_mat);
     lower(matrix,max_i,lower_mat);
 
-    printf("upper: %f \n",upper_mat[2]);
-    printf("lower: %f \n",lower_mat[1]);
+    printf("upper: %f \n",upper_mat[1]);
+    printf("lower: %f \n",lower_mat[2]);
     printf("bvect[0]: %f \n", bvect[0]);
     printf("bvect[1]: %f \n", bvect[1]);
 
@@ -104,8 +105,8 @@ int main(int argc, char** argv){
     matrix[2] = 1;
     matrix[3] = 2;
 
-    bvect[0] = 3;
-    bvect[1] = 0;
+    bvect[0] = 4;
+    bvect[1] = 5;
 
     // run guass_seidel algorithm for calculating the vector
     gauss_seidel(matrix,size,bvect,return_vect,itrs);
