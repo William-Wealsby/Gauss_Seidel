@@ -51,7 +51,7 @@ void lower(double* matrix,int max_i,double* return_matrix){
 void normalise_system(double* matrix,int max_i,double* bvect){
     for (int j=0;j<max_i;j++){
         for (int i=0;i<max_i;i++){matrix[i+max_i*j]/=matrix[j+max_i*j];}
-        bvect[j] /= matrix[j+max_i*j]; 
+        bvect[j] = bvect[j]/matrix[j+max_i*j]; 
     }
 }
  
@@ -60,8 +60,8 @@ void gauss_seidel(double* matrix,int max_i,double* bvect,double* return_vect,int
     
     double* upper_mat;
     double* lower_mat;
-    upper_mat = (double*)malloc(max_i*sizeof(double));
-    lower_mat = (double*)malloc(max_i*sizeof(double));
+    upper_mat = (double*)malloc(max_i*max_i*sizeof(double));
+    lower_mat = (double*)malloc(max_i*max_i*sizeof(double));
 
     for (int n=0;n<max_i;n++){return_vect[n]=bvect[n]/matrix[n*max_i+n];}
 
@@ -69,13 +69,18 @@ void gauss_seidel(double* matrix,int max_i,double* bvect,double* return_vect,int
     upper(matrix,max_i,upper_mat);
     lower(matrix,max_i,lower_mat);
 
+    printf("upper: %f \n",upper_mat[2]);
+    printf("lower: %f \n",lower_mat[1]);
+    printf("bvect[0]: %f \n", bvect[0]);
+    printf("bvect[1]: %f \n", bvect[1]);
+
     // loop for n iterations of the gs methods
     for (int n=0;n<itrs;n++){
         gs_iteration(upper_mat,lower_mat,max_i,bvect,return_vect);
     }
 
-    //free(upper_mat);
-    //free(lower_mat);
+    free(upper_mat);
+    free(lower_mat);
 
 }
 
@@ -86,7 +91,7 @@ int main(int argc, char** argv){
     double* matrix;
     double* bvect;
     double* return_vect;
-    int itrs = 10;
+    int itrs = 5;
     
     // allocate memory, for vectors and matrices
     matrix = (double*)malloc(size*size*sizeof(double));
@@ -94,7 +99,7 @@ int main(int argc, char** argv){
     return_vect = (double*)malloc(size*sizeof(double));
     
     // set values for bvect and matrix
-    matrix[0] = 1;
+    matrix[0] = 2;
     matrix[1] = 1;
     matrix[2] = 1;
     matrix[3] = 2;
@@ -106,6 +111,7 @@ int main(int argc, char** argv){
     gauss_seidel(matrix,size,bvect,return_vect,itrs);
   
     // output return vector
+    printf("final return\n");
     for (int i=0;i<size;i++){
         printf("%f ",return_vect[i]);
     }
@@ -114,11 +120,9 @@ int main(int argc, char** argv){
 
 
     // free memory used by vectors and matrices 
-    /*
     free(matrix);
     free(bvect);
     free(return_vect);
-    */
 
     return 0;
 }
