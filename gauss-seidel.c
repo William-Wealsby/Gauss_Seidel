@@ -70,11 +70,6 @@ void gauss_seidel(double* matrix,int max_i,double* bvect,double* return_vect,int
     upper(matrix,max_i,upper_mat);
     lower(matrix,max_i,lower_mat);
 
-    printf("upper: %f \n",upper_mat[1]);
-    printf("lower: %f \n",lower_mat[2]);
-    printf("bvect[0]: %f \n", bvect[0]);
-    printf("bvect[1]: %f \n", bvect[1]);
-
     // loop for n iterations of the gs methods
     for (int n=0;n<itrs;n++){
         gs_iteration(upper_mat,lower_mat,max_i,bvect,return_vect);
